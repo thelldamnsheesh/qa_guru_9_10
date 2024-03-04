@@ -1,37 +1,33 @@
-import os
-from selene import browser, command, have
+from tests.pages.registraion_page import RegistrationPage
 
 
 def test_registration_form():
-    browser.open('/automation-practice-form')
-    browser.element('#firstName').type('Пользователь')
-    browser.element('#lastName').type('Тестовый')
-    browser.element('#userEmail').type('Test@gmail.com')
-    browser.all('[for^=gender-radio-1]').element_by(have.exact_text('Male')).click()
-    browser.element('#userNumber').type('8005553535')
-    browser.element('#dateOfBirthInput').click()
-    browser.element('.react-datepicker__month-select').send_keys('June')
-    browser.element('.react-datepicker__year-select').send_keys('1995')
-    browser.element('[aria-label="Choose Tuesday, June 13th, 1995"]').perform(command.js.click)
-    browser.element('#subjectsInput').type('Ma').press_tab()
-    browser.all('[for^=hobbies-checkbox-1]').element_by(have.exact_text('Sports')).click()
-    browser.element('#uploadPicture').send_keys(os.path.abspath('../resources/mem.jpg'))
-    browser.element('#currentAddress').type('Russia, Moscow')
-    browser.element('#react-select-3-input').type('Uttar Pradesh').press_enter()
-    browser.element('#react-select-4-input').type('Agra').press_enter()
+    registration_page = RegistrationPage()
+    registration_page.open_page()
 
-    browser.driver.execute_script("document.body.style.zoom='75%'")
+    registration_page.fill_first_name('Пользователь')
+    registration_page.fill_last_name('Тестовый')
+    registration_page.fill_email('Test@gmail.com')
+    registration_page.select_gender('Male')
+    registration_page.fill_phone_number('8005553535')
+    registration_page.fill_date_of_birth('13', 'June', '1995')
+    registration_page.select_subject('Maths')
+    registration_page.select_hobbies('Sports')
+    registration_page.upload_picture('mem.jpg')
+    registration_page.fill_adress('Russia, Moscow')
+    registration_page.select_state('Uttar Pradesh')
+    registration_page.select_city('Agra')
+    registration_page.page_zoom('75')
+    registration_page.submit_form()
 
-    browser.element('#submit').perform(command.js.click)
-
-
-    browser.element('#example-modal-sizes-title-lg').should(have.text('Thanks for submitting the form'))
-    browser.element('.modal-body').should(have.text('Пользователь Тестовый'))
-    browser.element('.modal-body').should(have.text('Test@gmail.com'))
-    browser.element('.modal-body').should(have.text('Male'))
-    browser.element('.modal-body').should(have.text('8005553535'))
-    browser.element('.modal-body').should(have.text('13 June,1995'))
-    browser.element('.modal-body').should(have.text('Maths'))
-    browser.element('.modal-body').should(have.text('Sports'))
-    browser.element('.modal-body').should(have.text('Russia, Moscow'))
-    browser.element('.modal-body').should(have.text('Uttar Pradesh Agra'))
+    registration_page.should_registered_user_info(
+        'Пользователь Тестовый',
+        'Test@gmail.com',
+        'Male',
+        '8005553535',
+        '13 June,1995',
+        'Maths',
+        'Sports',
+        'Russia, Moscow',
+        'Uttar Pradesh Agra'
+    )
