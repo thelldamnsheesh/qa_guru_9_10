@@ -7,7 +7,7 @@ def test_registration_form():
     registration_page.open_page()
 
     registration_page.registration_user(user)
-    registration_page.zoom_page('75')
     registration_page.submit_form()
-    registration_page.should_registered_user_info(user)
+    registration_page.should_have_registered(user)
+    registration_page.close_modal_window()
 
