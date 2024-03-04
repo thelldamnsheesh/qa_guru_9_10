@@ -12,22 +12,27 @@ def test_registration_form():
     registration_page.fill_phone_number('8005553535')
     registration_page.fill_date_of_birth('13', 'June', '1995')
     registration_page.select_subject('Maths')
-    registration_page.select_hobbies('Sports')
+    registration_page.select_hobby('Sports')
     registration_page.upload_picture('mem.jpg')
-    registration_page.fill_adress('Russia, Moscow')
+    registration_page.fill_address('Russia, Moscow')
     registration_page.select_state('Uttar Pradesh')
     registration_page.select_city('Agra')
-    registration_page.page_zoom('75')
     registration_page.submit_form()
 
-    registration_page.should_registered_user_info(
-        'Пользователь Тестовый',
+    registration_page.should_have_registered(
+        'Пользователь',
+        'Тестовый',
         'Test@gmail.com',
         'Male',
         '8005553535',
-        '13 June,1995',
+        '13',
+        'June',
+        '1995',
         'Maths',
         'Sports',
+        'mem.jpg',
         'Russia, Moscow',
-        'Uttar Pradesh Agra'
-    )
+        'Uttar Pradesh',
+        'Agra')
+
+    registration_page.close_modal_window()

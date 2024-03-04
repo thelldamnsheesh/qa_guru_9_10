@@ -1,5 +1,6 @@
-import os
 from selene import browser, command, have, by
+from resources import resource
+
 
 class RegistrationPage:
     def open_page(self):
@@ -12,7 +13,7 @@ class RegistrationPage:
         browser.element('#lastName').type(value)
 
     def fill_email(self, value):
-        browser.element('#lastName').type(value)
+        browser.element('#userEmail').type(value)
 
     def select_gender(self, value):
         if value == 'Male':
@@ -36,37 +37,33 @@ class RegistrationPage:
         browser.element(f'.react-datepicker__day--0{day}').click()
 
     def select_subject(self, value):
-       browser.element('#subjectsInput').type(value).press_tab()
+        browser.element('#subjectsInput').type(value).press_tab()
 
-    def select_hobbies(self, value):
+    def select_hobby(self, value):
         browser.all('.custom-checkbox').element_by(have.exact_text(value)).click()
 
     def upload_picture(self, file):
-        browser.element('#uploadPicture').send_keys(os.path.abspath(f'../resources/{file}'))
+        browser.element("#uploadPicture").set_value(resource.path(file))
 
-    def fill_adress(self, value):
+    def fill_address(self, value):
         browser.element('#currentAddress').type(value)
 
-    def select_state(self,value):
+    def select_state(self, value):
         browser.element('#react-select-3-input').type(value).press_enter()
 
-    def select_city(self,value):
+    def select_city(self, value):
         browser.element('#react-select-4-input').type(value).press_enter()
-
-    def page_zoom(self, value):
-        browser.driver.execute_script(f"document.body.style.zoom='{value}%'")
 
     def submit_form(self):
         browser.element('#submit').perform(command.js.click)
 
-    def should_registered_user_info(self, name, email, gender, phone, DateOfBirth, subject, hobbie, adress, city):
-        browser.element('#example-modal-sizes-title-lg').should(have.text('Thanks for submitting the form'))
-        browser.element('.modal-body').should(have.text(name))
-        browser.element('.modal-body').should(have.text(email))
-        browser.element('.modal-body').should(have.text(gender))
-        browser.element('.modal-body').should(have.text(phone))
-        browser.element('.modal-body').should(have.text(DateOfBirth))
-        browser.element('.modal-body').should(have.text(subject))
-        browser.element('.modal-body').should(have.text(hobbie))
-        browser.element('.modal-body').should(have.text(adress))
-        browser.element('.modal-body').should(have.text(city))
+    def should_have_registered(self, first_name, last_name, email, gender, phone, day, month, year, subject,
+                               hobby, picture, address, state, city):
+
+        browser.all('.table td:nth-child(2)').should(
+            have.texts(f'{first_name} {last_name}', email, gender, phone, f'{day} {month},{year}', subject,
+                       hobby, picture, address, f'{state} {city}')
+        )
+
+    def close_modal_window(self):
+        browser.element('#closeLargeModal').perform(command.js.scroll_into_view).click()
