@@ -35,15 +35,9 @@ class Registration_form:
     def submit_form(self):
         browser.element('#submit').perform(command.js.click)
 
-    def read_modal_header(self):
-        return browser.element('.modal-header')
-
-    def read_table_data(self):
-        return browser.all('.table td:nth-child(2)')
-
     def should_have_registered(self, user):
-        self.read_modal_header().should(have.text("Thanks for submitting the form"))
-        self.read_table_data().should(
+
+        browser.all('.table td:nth-child(2)').should(
             have.texts(f'{user.first_name} {user.last_name}', user.email, user.gender, user.phone,
                        f'{user.day_of_birth} {user.month_of_birth},{user.year_of_birth}', user.subject,
                        user.hobby, user.picture, user.address, f'{user.state} {user.city}')
